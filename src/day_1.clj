@@ -2,16 +2,13 @@
   (:require [clojure.string :as string]))
 
 
+(defn- parse-input []
+  (map #(Integer/parseInt %)
+       (string/split (slurp "src/inputs/input-day-1.txt")
+                     #"\n")))
 
 (defn part1 []
-  (let [contents (slurp "src/inputs/input-day-1.txt")
-        readings-list (string/split contents #"\n")
-        deltas (map-indexed (fn [index value]
-                              (- (Integer/parseInt (nth readings-list
-                                                        (inc index)
-                                                        value))
-                                 (Integer/parseInt value)))
-                            readings-list)]
-    (count (filter pos? deltas))))
-
-
+  (->> (parse-input)
+       (partition 2 1)
+       (filter (fn [[a b]] (< a b)))
+       count))
