@@ -4,7 +4,7 @@
 
 (defn- parse-input []
   (map #(Integer/parseInt %)
-       (string/split (slurp "src/inputs/input-day-1.txt")
+       (string/split (slurp "src/inputs/day-1.txt")
                      #"\n")))
 
 (defn part1 [parsed-input]
