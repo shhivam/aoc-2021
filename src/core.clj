@@ -1,4 +1,4 @@
-(ns aoc-2021)
+(ns core)
 
 (defn plus-one [num]
   (inc num))

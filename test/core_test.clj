@@ -1,7 +1,7 @@
-(ns aoc-2021-test
+(ns core-test
   (:require [clojure.test :refer [deftest is testing]]
-            [aoc-2021 :as aoc-2021]))
+            [core :as core]))
 
 (deftest plus-one
   (testing "Should return us the incremented value"
-    (is (= 4 (aoc-2021/plus-one 2)))))
+    (is (= 3 (core/plus-one 2)))))
