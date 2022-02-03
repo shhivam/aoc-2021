@@ -27,9 +27,31 @@
 ;; (time (dotimes [_ 100]
 ;;         (part1 (parse-input))))
 
+
 ;; "Elapsed time: 361.985708 msecs" 
 ;; (time (dotimes [_ 1000]
 ;;         (part1 (parse-input))))
 
 (defn part1 [parsed-input]
   (* (calc-depth parsed-input) (calc-forward parsed-input)))
+
+
+
+(defn- eval-line [{:keys [aim depth forward] :as current-state} string]
+  (let [int-value (extract-int-value string)]
+    (cond
+      (string/starts-with? string "up")
+      (assoc current-state :aim (- aim int-value))
+      (string/starts-with? string "down")
+      (assoc current-state :aim (+ aim int-value))
+      (string/starts-with? string "forward")
+      (assoc current-state
+             :forward (+ forward int-value)
+             :depth (+ depth (* aim int-value)))
+      :else current-state)))
+
+(defn part2 [parsed-input]
+  (let [{:keys [depth forward]} (reduce eval-line
+                                        {:aim 0 :depth 0 :forward 0}
+                                        parsed-input)]
+    (* depth forward)))
