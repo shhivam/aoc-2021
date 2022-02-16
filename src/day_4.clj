@@ -47,3 +47,24 @@
 (defn part1 []
   (let [{:keys [numbers bingo-boards]} (parse-input)]
     (mark-boards-and-score bingo-boards numbers 0)))
+
+
+(defn calc-score-of-last-winner [boards [first-num & rest-nums] last-number-winner last-bingoed-board]
+  (let [marked-boards (mapv #(mark-bingo-with-num % first-num) boards)
+        {new-bingoed-boards true
+         un-bingoed-boards false} (group-by bingo? marked-boards)]
+    (if (or (empty? boards)
+            (not first-num))
+      (calc-score last-bingoed-board last-number-winner)
+      (calc-score-of-last-winner
+       un-bingoed-boards
+       rest-nums
+       (when (not-empty new-bingoed-boards)
+         first-num)
+       (when (not-empty new-bingoed-boards)
+         (last new-bingoed-boards))))))
+
+
+(defn part2 []
+  (let [{:keys [numbers bingo-boards]} (parse-input)]
+    (calc-score-of-last-winner bingo-boards numbers nil nil)))
