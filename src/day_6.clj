@@ -3,31 +3,31 @@
 
 
 (defn- parse-input []
-  (mapv #(Long/parseLong %)
-       (string/split (slurp "src/inputs/day-6.txt") #",")))
-
-(defn- count-occurence [value coll]
-  (->> coll
-       (filter #(= value %))
-       count))
-
-(defn- decrement-num-days [num-days]
-  (if (= 0 num-days)
-    6
-    (dec num-days)))
+  (frequencies (mapv #(Long/parseLong %)
+       (string/split (slurp "src/inputs/day-6.txt") #","))))
 
 (defn fishes-after-a-day [fishes-day]
-  (let [zeros-occurence (count-occurence 0 fishes-day)]
-    (->> fishes-day
-         (mapv decrement-num-days)
-         (concat (repeatedly zeros-occurence (constantly 8))))))
+  (assoc fishes-day
+         0 (get fishes-day 1)
+         1 (get fishes-day 2)
+         2 (get fishes-day 3)
+         3 (get fishes-day 4)
+         4 (get fishes-day 5)
+         5 (get fishes-day 6)
+         6 (+ (or (get fishes-day 7) 0)
+              (or (get fishes-day 0) 0))
+         7 (get fishes-day 8)
+         8 (get fishes-day 0)))
 
-(defn part1 
-  ([] (part1 (parse-input) 0))
-  ([fishes-days iteration-count]
-   (if (= iteration-count 80)
-     (count fishes-days)
-     (part1 (fishes-after-a-day fishes-days) 
-            (inc iteration-count)))))
+(defn solve [fishes-days days-passed total-days]
+  (if (= days-passed total-days)
+    (reduce + (filter some? (vals fishes-days)))
+    (solve (fishes-after-a-day fishes-days)
+           (inc days-passed)
+           total-days)))
 
+(defn part1 []
+  (solve (parse-input) 0 80))
 
+(defn part2 []
+  (solve (parse-input) 0 256))
